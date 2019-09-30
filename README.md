@@ -7,7 +7,7 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-  
-  dependencies {
+	
+ 	dependencies {
 	        implementation 'com.github.lic2050:KeyBoardPanel:Tag'
 	}
