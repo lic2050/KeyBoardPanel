@@ -9,5 +9,5 @@
 	}
 	
  	dependencies {
-	        implementation 'com.github.lic2050:KeyBoardPanel:Tag'
+	        implementation 'com.github.lic2050:KeyBoardPanel:1.0.0'
 	}
