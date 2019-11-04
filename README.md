@@ -9,5 +9,5 @@
 	}
 	
  	dependencies {
-	        implementation 'com.github.lic2050:KeyBoardPanel:1.0.0'
+		implementation 'com.github.lic2050:KeyBoardPanel:1.1.0'
 	}
