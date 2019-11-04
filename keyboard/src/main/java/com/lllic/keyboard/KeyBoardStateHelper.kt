@@ -61,7 +61,6 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
             }
             popupWindow.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0)
         }
-
     }
 
     private fun onStateChange() {

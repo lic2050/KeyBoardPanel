@@ -8,10 +8,15 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.FrameLayout
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isGone
 
 
 class PanelLayout : FrameLayout, IPanelLayout {
+    private var listener: ((show: Boolean, height: Int) -> Unit)? = null
+    override fun setOnKeyBoardPanelShowDelayListener(listener: (show: Boolean, height: Int) -> Unit) {
+        this.listener = listener
+    }
 
     var enableChangeAnim = true
     private var duration = 300L
@@ -20,15 +25,15 @@ class PanelLayout : FrameLayout, IPanelLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
+        context,
+        attrs,
+        defStyleAttr
     )
 
     /**
      * 当键盘打开时显示占位
      */
-    override fun placeHolderOnKeyBoardShow(height: Int) {
+    override fun placeHolderOnKeyBoardShow(height: Int, notifyListener: Boolean) {
         if (isGone) {
             visibility = View.INVISIBLE
         }
@@ -41,13 +46,13 @@ class PanelLayout : FrameLayout, IPanelLayout {
         }
         interpolator = DecelerateInterpolator()
         duration = 150L
-        changePanelHeight(height)
+        changePanelHeight(height, true, notifyListener)
     }
 
     /**
      * 显示表情面板
      */
-    override fun showPanel(height: Int) {
+    override fun showPanel(height: Int, notifyListener: Boolean) {
         visibility = View.VISIBLE
         if (isInvisibleChild) {
             for (i in 0 until childCount) {
@@ -58,17 +63,21 @@ class PanelLayout : FrameLayout, IPanelLayout {
         }
         duration = 200L
         interpolator = AccelerateDecelerateInterpolator()
-        changePanelHeight(height)
+        changePanelHeight(height, true, notifyListener)
     }
 
     /**
      * 关闭表情面板
      */
-    override fun closePanel(height: Int) {
-        changePanelHeight(0)
+    override fun closePanel(height: Int, notifyListener: Boolean) {
+        changePanelHeight(0, false, notifyListener)
     }
 
-    private fun changePanelHeight(height: Int) {
+    private fun changePanelHeight(
+        height: Int,
+        show: Boolean,
+        notifyListener: Boolean
+    ) {
         if (enableChangeAnim) {
             val animator = ValueAnimator()
             animator.setIntValues(layoutParams.height, height)
@@ -77,7 +86,11 @@ class PanelLayout : FrameLayout, IPanelLayout {
             animator.addUpdateListener {
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
-
+            }
+            animator.doOnEnd {
+                if (notifyListener) {
+                    listener?.invoke(show, height)
+                }
             }
             animator.start()
         } else {

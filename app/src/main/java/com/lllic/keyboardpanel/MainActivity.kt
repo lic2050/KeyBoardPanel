@@ -1,6 +1,7 @@
 package com.lllic.keyboardpanel
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.lllic.keyboard.KeyBoardUtil
 import com.lllic.keyboard.panel.KeyBoardPanelSwitchHelper
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                     //键盘或者表情面板隐藏
                     btSwitch.text = "表情"
                 }
+
             }
             onKeyBoardPanelSwitch { isKeyBoard, height, switchView ->
                 if (isKeyBoard) {
@@ -49,6 +51,25 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     //表情面板显示
                     btSwitch.text = "键盘"
+                }
+            }
+            onKeyBoardPanelShowDelay { show, height ->
+                if (show) {
+                    //键盘或者表情面板显示
+                    textview1.visibility = View.GONE
+                    textview2.visibility = View.GONE
+                    textview4.visibility = View.GONE
+                    textview3.visibility = View.VISIBLE
+                    textview5.visibility = View.VISIBLE
+                } else {
+                    //键盘或者表情面板隐藏
+                    btSwitch.text = "表情"
+
+                    textview3.visibility = View.GONE
+                    textview5.visibility = View.GONE
+                    textview1.visibility = View.VISIBLE
+                    textview2.visibility = View.VISIBLE
+                    textview4.visibility = View.VISIBLE
                 }
             }
         }

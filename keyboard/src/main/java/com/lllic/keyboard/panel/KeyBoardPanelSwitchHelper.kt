@@ -9,18 +9,24 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     /**
      * 键盘和表情面板切换监听
      */
-    private var onKeyBoardPanelSwitchListener: ((isKeyBoard: Boolean, height: Int, switchView: View?) -> Unit)? = null
+    private var onKeyBoardPanelSwitchListener: ((isKeyBoard: Boolean, height: Int, switchView: View?) -> Unit)? =
+        null
     /**
      * 键盘或表情面板显示隐藏监听
      */
     private var onKeyBoardPanelShowListener: ((show: Boolean, height: Int) -> Unit)? = null
 
-    fun onKeyBoardPanelShow(listener: (show: Boolean, height: Int) -> Unit)  : KeyBoardPanelSwitchHelper {
+    fun onKeyBoardPanelShow(listener: (show: Boolean, height: Int) -> Unit): KeyBoardPanelSwitchHelper {
         onKeyBoardPanelShowListener = listener
         return this
     }
 
-    fun onKeyBoardPanelSwitch(listener: (isKeyBoard: Boolean, height: Int, switchView: View?) -> Unit) : KeyBoardPanelSwitchHelper {
+    fun onKeyBoardPanelShowDelay(listener: (show: Boolean, height: Int) -> Unit): KeyBoardPanelSwitchHelper {
+        panelView.setOnKeyBoardPanelShowDelayListener(listener)
+        return this
+    }
+
+    fun onKeyBoardPanelSwitch(listener: (isKeyBoard: Boolean, height: Int, switchView: View?) -> Unit): KeyBoardPanelSwitchHelper {
         onKeyBoardPanelSwitchListener = listener
         return this
     }
@@ -30,9 +36,11 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     private var needShowPanel = false
 
     internal fun onKeyBoardShow(height: Int) {
-        panelView.placeHolderOnKeyBoardShow(height)
         if (!keyBoardPanelShowing) {
+            panelView.placeHolderOnKeyBoardShow(height, true)
             onKeyBoardPanelShowListener?.invoke(true, height)
+        } else {
+            panelView.placeHolderOnKeyBoardShow(height, false)
         }
         onKeyBoardPanelSwitchListener?.invoke(true, height, clickSwitchBotton)
         clickSwitchBotton = null
@@ -41,15 +49,18 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     }
 
     internal fun onKeyBoardHeightChange(height: Int) {
-        panelView.placeHolderOnKeyBoardShow(height)
+        panelView.placeHolderOnKeyBoardShow(height, false)
     }
 
     fun hideKeyBoardPanel() {
         if (panelShowing) {
-            panelView.closePanel(0)
+            panelView.closePanel(0, true)
             keyBoardPanelShowing = false
             panelShowing = false
-            onKeyBoardPanelShowListener?.invoke(false, KeyBoardUtil.getKeyboardHeight(editText.context))
+            onKeyBoardPanelShowListener?.invoke(
+                false,
+                KeyBoardUtil.getKeyboardHeight(editText.context)
+            )
         } else {
             KeyBoardUtil.hideKeyboard(editText)
         }
@@ -77,12 +88,14 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     private var clickSwitchBotton: View? = null
 
     private fun showPanelLayout(height: Int) {
+        needShowPanel = false
         if (!keyBoardPanelShowing) {
             keyBoardPanelShowing = true
             onKeyBoardPanelShowListener?.invoke(true, height)
+            panelView.showPanel(height, true)
+        } else {
+            panelView.showPanel(height, false)
         }
-        needShowPanel = false
-        panelView.showPanel(height)
         panelShowing = true
         onKeyBoardPanelSwitchListener?.invoke(false, height, clickSwitchBotton)
         clickSwitchBotton = null
@@ -90,7 +103,7 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
 
     private fun hidePanelLayout() {
         val keyboardHeight = KeyBoardUtil.getKeyboardHeight(editText.context)
-        panelView.closePanel(keyboardHeight)
+        panelView.closePanel(keyboardHeight, true)
         keyBoardPanelShowing = false
         panelShowing = false
         onKeyBoardPanelShowListener?.invoke(false, keyboardHeight)
