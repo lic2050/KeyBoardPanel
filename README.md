@@ -11,3 +11,6 @@
  	dependencies {
 		implementation 'com.github.lic2050:KeyBoardPanel:1.1.0'
 	}
+
+
+[![](https://jitpack.io/v/lic2050/KeyBoardPanel.svg)](https://jitpack.io/#lic2050/KeyBoardPanel)
