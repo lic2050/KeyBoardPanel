@@ -16,6 +16,8 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
      */
     private var onKeyBoardPanelShowListener: ((show: Boolean, height: Int) -> Unit)? = null
 
+    var reactKeyboardChange = true
+
     fun onKeyBoardPanelShow(listener: (show: Boolean, height: Int) -> Unit): KeyBoardPanelSwitchHelper {
         onKeyBoardPanelShowListener = listener
         return this
@@ -36,6 +38,9 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     private var needShowPanel = false
 
     internal fun onKeyBoardShow(height: Int) {
+        if (!reactKeyboardChange) {
+            return
+        }
         if (!keyBoardPanelShowing) {
             panelView.placeHolderOnKeyBoardShow(height, true)
             onKeyBoardPanelShowListener?.invoke(true, height)
@@ -49,6 +54,9 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     }
 
     internal fun onKeyBoardHeightChange(height: Int) {
+        if (!reactKeyboardChange){
+            return
+        }
         panelView.placeHolderOnKeyBoardShow(height, false)
     }
 
@@ -67,6 +75,9 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
     }
 
     internal fun onKeyBoardClose(height: Int) {
+        if (!reactKeyboardChange) {
+            return
+        }
         if (needShowPanel) {
             showPanelLayout(height)
         } else {

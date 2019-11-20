@@ -1,5 +1,6 @@
 package com.lllic.keyboardpanel
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             onKeyBoardPanelShowDelay { show, height ->
                 if (show) {
                     //键盘或者表情面板显示
-                    textview1.visibility = View.GONE
+                    textview1.visibility = View.VISIBLE
                     textview2.visibility = View.GONE
                     textview4.visibility = View.GONE
                     textview3.visibility = View.VISIBLE
@@ -79,6 +80,15 @@ class MainActivity : AppCompatActivity() {
         tvContent.setOnTouchListener { _, _ ->
             panelSwitchHelper?.let { KeyBoardUtil.hideKeyboardPanel(it) }
             return@setOnTouchListener false
+        }
+        textview1.setOnClickListener {
+            panelSwitchHelper?.reactKeyboardChange = false
+            Dialog(this).apply {
+                setContentView(R.layout.dialog_edit)
+                setOnDismissListener {
+                    panelSwitchHelper?.reactKeyboardChange = true
+                }
+            }.show()
         }
     }
 
