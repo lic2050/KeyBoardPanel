@@ -112,7 +112,7 @@ class KeyBoardPanelSwitchHelper(val panelView: IPanelLayout, val editText: EditT
         clickSwitchBotton = null
     }
 
-    private fun hidePanelLayout() {
+    fun hidePanelLayout() {
         val keyboardHeight = KeyBoardUtil.getKeyboardHeight(editText.context)
         panelView.closePanel(keyboardHeight, true)
         keyBoardPanelShowing = false
