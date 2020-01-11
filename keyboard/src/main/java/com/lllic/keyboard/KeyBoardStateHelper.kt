@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleObserver
 import com.lllic.keyboard.panel.IPanelLayout
 import com.lllic.keyboard.panel.KeyBoardPanelSwitchHelper
 
@@ -52,6 +53,7 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
         activity.lifecycle.addObserver(object : DestoryObserver {
             override fun onDestory() {
                 popupWindow.contentView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+                popupWindow.dismiss()
             }
         })
         val decorView = activity.window?.decorView
