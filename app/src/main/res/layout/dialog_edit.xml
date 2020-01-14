@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <EditText
+        android:id="@+id/etDialog"
         android:layout_width="200dp"
         android:layout_height="50dp"/>
 </LinearLayout>

@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LifecycleObserver
 import com.lllic.keyboard.panel.IPanelLayout
 import com.lllic.keyboard.panel.KeyBoardPanelSwitchHelper
 
@@ -116,6 +115,7 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
             onKeyBoardShowListener?.invoke(false, keyboardHeight)
         }
     }
+
     /**
      * 键盘显示隐藏监听
      */
@@ -134,7 +134,7 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
 
     fun bindPanel(panelView: IPanelLayout, focusEditText: EditText): KeyBoardPanelSwitchHelper {
         keyBoardPanelSwitchHelper =
-                KeyBoardPanelSwitchHelper(panelView, focusEditText)
+            KeyBoardPanelSwitchHelper(panelView, focusEditText)
         return keyBoardPanelSwitchHelper!!
     }
 }
