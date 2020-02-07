@@ -1,9 +1,9 @@
 package com.lllic.keyboardpanel
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             onNavBarChange { show, navBarHeight ->
+                Log.d("onNavBarChange", "navBarHeight $navBarHeight")
                 if (show) {
                     //导航栏显示
                     (llBottom.layoutParams as? ViewGroup.MarginLayoutParams?)?.let { layoutParams ->
@@ -107,10 +108,8 @@ class MainActivity : AppCompatActivity() {
 private fun setTranslucent(window: Window, alpha: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.statusBarColor = Color.argb(alpha, 0, 0, 0)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    } else {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
+    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 }
 
 /**
@@ -122,8 +121,6 @@ private fun setTranslucent(window: Window, alpha: Int = 0) {
 private fun setTranslucentNav(window: Window, alpha: Int = 0) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.navigationBarColor = Color.argb(alpha, 0, 0, 0)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-    } else {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
+    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 }

@@ -3,7 +3,9 @@ package com.lllic.keyboard
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
+import android.os.Build
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
@@ -19,6 +21,7 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
 
     private val popupWindow: PopupWindow = PopupWindow()
     private val layoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private val windowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener
     private val screenRealHeight: Int
     private var keybordShow = false
     private var displayHeight: Int = 0
@@ -49,16 +52,27 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
         screenRealHeight = activity.screenRealHeight
         layoutListener = ViewTreeObserver.OnGlobalLayoutListener { onStateChange() }
         popupWindow.contentView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        windowFocusChangeListener = ViewTreeObserver.OnWindowFocusChangeListener {focus ->
+            if (!focus){
+                keyBoardPanelSwitchHelper?.hideKeyBoardPanel()
+            }
+        }
+        val decorView = activity.window?.decorView
         activity.lifecycle.addObserver(object : DestoryObserver {
             override fun onDestory() {
                 popupWindow.contentView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    decorView?.viewTreeObserver?.removeOnWindowFocusChangeListener(windowFocusChangeListener)
+                }
                 popupWindow.dismiss()
             }
         })
-        val decorView = activity.window?.decorView
         decorView?.post {
             if (activity.isFinishing || activity.isDestroyed) {
                 return@post
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                decorView.viewTreeObserver.addOnWindowFocusChangeListener(windowFocusChangeListener)
             }
             popupWindow.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0)
         }
