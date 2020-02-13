@@ -21,7 +21,7 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
 
     private val popupWindow: PopupWindow = PopupWindow()
     private val layoutListener: ViewTreeObserver.OnGlobalLayoutListener
-    private val windowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener
+    private var windowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener? = null
     private val screenRealHeight: Int
     private var keybordShow = false
     private var displayHeight: Int = 0
@@ -52,9 +52,11 @@ class KeyBoardStateHelper(activity: FragmentActivity) {
         screenRealHeight = activity.screenRealHeight
         layoutListener = ViewTreeObserver.OnGlobalLayoutListener { onStateChange() }
         popupWindow.contentView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        windowFocusChangeListener = ViewTreeObserver.OnWindowFocusChangeListener {focus ->
-            if (!focus){
-                keyBoardPanelSwitchHelper?.hideKeyBoardPanel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            windowFocusChangeListener = ViewTreeObserver.OnWindowFocusChangeListener {focus ->
+                if (!focus){
+                    keyBoardPanelSwitchHelper?.hideKeyBoardPanel()
+                }
             }
         }
         val decorView = activity.window?.decorView
