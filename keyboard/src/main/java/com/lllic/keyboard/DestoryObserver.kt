@@ -7,4 +7,6 @@ import androidx.lifecycle.OnLifecycleEvent
 internal interface DestoryObserver :LifecycleObserver{
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestory()
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun onPause()
 }
